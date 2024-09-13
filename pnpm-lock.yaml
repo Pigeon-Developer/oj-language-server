@@ -14,6 +14,9 @@ importers:
       '@codingame/monaco-vscode-configuration-service-override':
         specifier: ~8.0.4
         version: 8.0.4
+      '@codingame/monaco-vscode-cpp-default-extension':
+        specifier: ^8.0.4
+        version: 8.0.4
       '@codingame/monaco-vscode-editor-service-override':
         specifier: ^8.0.4
         version: 8.0.4
@@ -68,6 +71,9 @@ importers:
       '@codingame/monaco-vscode-typescript-language-features-default-extension':
         specifier: ~8.0.4
         version: 8.0.4
+      '@nanostores/react':
+        specifier: ^0.7.3
+        version: 0.7.3(nanostores@0.11.3)(react@18.3.1)
       '@typefox/monaco-editor-react':
         specifier: ~4.5.3
         version: 4.5.3(@codingame/monaco-vscode-api@8.0.4)(@codingame/monaco-vscode-editor-api@8.0.4)(monaco-editor-wrapper@5.5.3(@codingame/monaco-vscode-api@8.0.4)(@codingame/monaco-vscode-editor-api@8.0.4)(monaco-languageclient@8.8.3(@codingame/monaco-vscode-api@8.0.4)(@codingame/monaco-vscode-editor-api@8.0.4)))(monaco-languageclient@8.8.3(@codingame/monaco-vscode-api@8.0.4)(@codingame/monaco-vscode-editor-api@8.0.4))(react@18.3.1)
@@ -86,6 +92,9 @@ importers:
       monaco-languageclient:
         specifier: ^8.8.3
         version: 8.8.3(@codingame/monaco-vscode-api@8.0.4)(@codingame/monaco-vscode-editor-api@8.0.4)
+      nanostores:
+        specifier: ^0.11.3
+        version: 0.11.3
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -191,6 +200,9 @@ packages:
 
   '@codingame/monaco-vscode-configuration-service-override@8.0.4':
     resolution: {integrity: sha512-Fx8wRY3G2s3fpcQWGBMEe7fUmDhPFSkn+b/DwPCTiyo9IX+uKk8w097XjJBwCk0wVHgOcYs4GKPsip5IqJkydw==}
+
+  '@codingame/monaco-vscode-cpp-default-extension@8.0.4':
+    resolution: {integrity: sha512-oybBSYYJvHCOrh8tfjyvrMzmjfxirPlScN6PfZF+Q97noejkw+HIxQkdWw4G5+PWQiPv67FfksRpBgkrx2RZAQ==}
 
   '@codingame/monaco-vscode-editor-api@8.0.4':
     resolution: {integrity: sha512-rKUdFRsnzTV1dj6FL/MD+cBIUAGv9aJNz8bTx4BA5sDK3lDWuifhdCBvk4WZEj6glfXe3sEfGXKy1Vp5btDOJQ==}
@@ -516,6 +528,13 @@ packages:
 
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
+
+  '@nanostores/react@0.7.3':
+    resolution: {integrity: sha512-/XuLAMENRu/Q71biW4AZ4qmU070vkZgiQ28gaTSNRPm2SZF5zGAR81zPE1MaMB4SeOp6ZTst92NBaG75XSspNg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
+      react: '>=18.0.0'
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1898,6 +1917,10 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanostores@0.11.3:
+    resolution: {integrity: sha512-TUes3xKIX33re4QzdxwZ6tdbodjmn3tWXCEc1uokiEmo14sI1EaGYNs2k3bU2pyyGNmBqFGAVl6jAGWd06AVIg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+
   needle@3.3.1:
     resolution: {integrity: sha512-6k0YULvhpw+RoLNiQCRKOl09Rv1dPLr8hHnVjHqdolKwDrdNyk+Hmrthi4lIGPPz3r39dLx0hsF5s40sZ3Us4Q==}
     engines: {node: '>= 4.4.x'}
@@ -2858,6 +2881,10 @@ snapshots:
       '@codingame/monaco-vscode-files-service-override': 8.0.4
       vscode: '@codingame/monaco-vscode-api@8.0.4'
 
+  '@codingame/monaco-vscode-cpp-default-extension@8.0.4':
+    dependencies:
+      vscode: '@codingame/monaco-vscode-api@8.0.4'
+
   '@codingame/monaco-vscode-editor-api@8.0.4':
     dependencies:
       vscode: '@codingame/monaco-vscode-api@8.0.4'
@@ -3164,6 +3191,11 @@ snapshots:
       tslib: 2.7.0
 
   '@leichtgewicht/ip-codec@2.0.5': {}
+
+  '@nanostores/react@0.7.3(nanostores@0.11.3)(react@18.3.1)':
+    dependencies:
+      nanostores: 0.11.3
+      react: 18.3.1
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -4566,6 +4598,8 @@ snapshots:
       thenify-all: 1.6.0
 
   nanoid@3.3.7: {}
+
+  nanostores@0.11.3: {}
 
   needle@3.3.1:
     dependencies:

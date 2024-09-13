@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) 2024 TypeFox and others.
@@ -8,14 +8,18 @@ import React, { useRef } from 'react';
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-python-default-extension';
+import '@codingame/monaco-vscode-cpp-default-extension';
 import {
   RegisteredFileSystemProvider,
   registerFileSystemOverlay,
   RegisteredMemoryFile,
 } from '@codingame/monaco-vscode-files-service-override';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { createUserConfig } from './config';
+import { atom } from 'nanostores';
+import { useStore } from '@nanostores/react';
+import { createUserConfigForCpp, createUserConfigForPython } from './config';
+import { useCallback } from 'react';
 
 export const configureMonacoWorkers = () => {
   useWorkerFactory({
@@ -27,7 +31,27 @@ export const configureMonacoWorkers = () => {
   });
 };
 
-export const runPythonWrapper = async () => {
+interface EditorItem {
+  userConfig: UserConfig;
+  wrapper: MonacoEditorLanguageClientWrapper;
+  fileUri: vscode.Uri;
+}
+
+async function runEditor(item: EditorItem) {
+  const htmlElement: HTMLElement = document.querySelector('#editor')!;
+  if (item.wrapper.isStarted()) {
+    console.warn('Editor was already started!');
+  } else {
+    await item.wrapper.init(item.userConfig);
+
+    // open files, so the LS can pick it up
+    await vscode.workspace.openTextDocument(item.fileUri);
+
+    await item.wrapper.start(htmlElement);
+  }
+}
+
+export const createPythonWrapper = () => {
   const helloPyUri = vscode.Uri.file('/workspace/hello.py');
 
   const helloPyCode = '';
@@ -35,38 +59,65 @@ export const runPythonWrapper = async () => {
   fileSystemProvider.registerFile(new RegisteredMemoryFile(helloPyUri, helloPyCode));
 
   registerFileSystemOverlay(1, fileSystemProvider);
-  const userConfig = createUserConfig('/workspace', helloPyCode, '/workspace/hello.py');
+  const userConfig = createUserConfigForPython('/workspace', helloPyCode, '/workspace/hello.py');
   const wrapper = new MonacoEditorLanguageClientWrapper();
 
-  return async function (htmlElement: HTMLElement) {
-    if (wrapper.isStarted()) {
-      console.warn('Editor was already started!');
-    } else {
-      await wrapper.init(userConfig);
-
-      // open files, so the LS can pick it up
-      await vscode.workspace.openTextDocument(helloPyUri);
-
-      await wrapper.start(htmlElement);
-    }
+  return {
+    userConfig: userConfig,
+    wrapper: wrapper,
+    fileUri: helloPyUri,
   };
 };
 
-const bootResult = runPythonWrapper();
+export const createCppWrapper = () => {
+  const filePath = '/workspace/main.cpp';
+  const fileUri = vscode.Uri.file(filePath);
+
+  const code = '';
+  const fileSystemProvider = new RegisteredFileSystemProvider(false);
+  fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, code));
+
+  registerFileSystemOverlay(1, fileSystemProvider);
+  const userConfig = createUserConfigForCpp('/workspace', code, filePath);
+  const wrapper = new MonacoEditorLanguageClientWrapper();
+
+  return {
+    userConfig: userConfig,
+    wrapper: wrapper,
+    fileUri: fileUri,
+  };
+};
+
+const EditorMap: Record<string, EditorItem> = {
+  cpp: createCppWrapper(),
+  python: createPythonWrapper(),
+};
+
+export const language = atom<string>('cpp');
+
+function Select() {
+  const value = useStore(language);
+
+  return (
+    <div>
+      语言
+      <select value={value}>
+        <option value="cpp">cpp</option>
+        <option value="python">python</option>
+      </select>
+    </div>
+  );
+}
 
 export default function Editor() {
-  const dom = useRef<HTMLDivElement>(null);
+  const onMount = useCallback(() => {
+    runEditor(EditorMap.cpp);
+  }, []);
+
   return (
-    <div
-      style={{ width: 800, height: 800 }}
-      ref={dom}
-      onClick={(e) => {
-        bootResult.then((start) => {
-          start(dom.current!);
-        });
-      }}
-    >
-      启动
+    <div>
+      <Select />
+      <div id="editor" style={{ width: 800, height: 800 }} ref={onMount}></div>
     </div>
   );
 }
