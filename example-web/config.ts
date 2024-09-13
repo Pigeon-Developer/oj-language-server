@@ -6,7 +6,6 @@
 import * as vscode from 'vscode';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-python-default-extension';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
@@ -138,6 +137,56 @@ export const createUserConfigForCpp = (workspaceRoot: string, code: string, code
     loggerConfig: {
       enabled: true,
       debugEnabled: true,
+    },
+  };
+};
+export const createUserConfigForJava = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
+  return {
+    wrapperConfig: {
+      serviceConfig: {
+        userServices: {
+          ...getKeybindingsServiceOverride(),
+        },
+        debugLogging: true,
+      },
+      editorAppConfig: {
+        $type: 'extended',
+        codeResources: {
+          main: {
+            text: code,
+            uri: codeUri,
+          },
+        },
+        useDiffEditor: false,
+        userConfiguration: {
+          json: JSON.stringify({
+            'workbench.colorTheme': 'Default Dark Modern',
+            'editor.guides.bracketPairsHorizontal': 'active',
+            'editor.wordBasedSuggestions': 'off',
+          }),
+        },
+      },
+    },
+    languageClientConfig: {
+      languageId: 'java',
+      options: {
+        $type: 'WebSocket',
+        host: 'localhost',
+        port: 30001,
+        path: 'jdtls',
+        extraParams: {
+          authorization: 'UserAuth',
+        },
+        secured: false,
+      },
+      clientOptions: {
+        documentSelector: ['java'],
+        workspaceFolder: {
+          index: 0,
+          name: 'workspace',
+          uri: vscode.Uri.parse(workspaceRoot),
+        },
+      },
     },
   };
 };

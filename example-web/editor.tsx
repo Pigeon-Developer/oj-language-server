@@ -9,6 +9,7 @@ import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-python-default-extension';
 import '@codingame/monaco-vscode-cpp-default-extension';
+import '@codingame/monaco-vscode-java-default-extension';
 import {
   RegisteredFileSystemProvider,
   registerFileSystemOverlay,
@@ -18,7 +19,7 @@ import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wra
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { atom } from 'nanostores';
 import { useStore } from '@nanostores/react';
-import { createUserConfigForCpp, createUserConfigForPython } from './config';
+import { createUserConfigForCpp, createUserConfigForJava, createUserConfigForPython } from './config';
 import { useCallback } from 'react';
 
 export const configureMonacoWorkers = () => {
@@ -88,9 +89,30 @@ export const createCppWrapper = () => {
   };
 };
 
+export const createJavaWrapper = () => {
+  const basePath = '/home/mlc/packages/examples/resources/eclipse.jdt.ls';
+  const filePath = `${basePath}/workspace/main.java`;
+  const fileUri = vscode.Uri.file(filePath);
+
+  const code = ``;
+  const fileSystemProvider = new RegisteredFileSystemProvider(false);
+  fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, code));
+
+  registerFileSystemOverlay(1, fileSystemProvider);
+  const userConfig = createUserConfigForJava(`${basePath}/workspace`, code, filePath);
+  const wrapper = new MonacoEditorLanguageClientWrapper();
+
+  return {
+    userConfig: userConfig,
+    wrapper: wrapper,
+    fileUri: fileUri,
+  };
+};
+
 const EditorMap: Record<string, EditorItem> = {
   cpp: createCppWrapper(),
   python: createPythonWrapper(),
+  java: createJavaWrapper(),
 };
 
 export const language = atom<string>('cpp');
@@ -104,6 +126,7 @@ function Select() {
       <select value={value}>
         <option value="cpp">cpp</option>
         <option value="python">python</option>
+        <option value="java">java</option>
       </select>
     </div>
   );
