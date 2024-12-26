@@ -22,8 +22,13 @@ function getCurrentPort() {
   return window.location.protocol === 'https:' ? 443 : 80;
 }
 
+function getSecured() {
+  return window.location.protocol === 'https:' ? true : false;
+}
+
 const host = window.location.hostname;
 const port = getCurrentPort();
+const secured = getSecured();
 
 export const createUserConfigForPython = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
   return {
@@ -38,7 +43,7 @@ export const createUserConfigForPython = (workspaceRoot: string, code: string, c
         extraParams: {
           authorization: 'UserAuth',
         },
-        secured: false,
+        secured: secured,
         startOptions: {
           onCall: (languageClient?: MonacoLanguageClient) => {
             setTimeout(() => {
@@ -107,7 +112,7 @@ export const createUserConfigForCpp = (workspaceRoot: string, code: string, code
         extraParams: {
           authorization: 'UserAuth',
         },
-        secured: false,
+        secured: secured,
       },
       clientOptions: {
         documentSelector: ['cpp'],
@@ -187,7 +192,7 @@ export const createUserConfigForJava = (workspaceRoot: string, code: string, cod
         extraParams: {
           authorization: 'UserAuth',
         },
-        secured: false,
+        secured: secured,
       },
       clientOptions: {
         documentSelector: ['java'],
