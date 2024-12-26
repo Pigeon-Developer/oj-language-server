@@ -1,4 +1,4 @@
-FROM oj-language-server-common as common
+FROM pigeonojdev/oj-language-server-common as common
 
 
 

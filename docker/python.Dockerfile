@@ -1,4 +1,4 @@
-FROM oj-language-server-common
+FROM pigeonojdev/oj-language-server-common
 
 RUN apt-get update && apt-get install clangd -y
 
