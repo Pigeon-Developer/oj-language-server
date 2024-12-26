@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           file: docker/java.Dockerfile
-          context: .
+          context: ./docker
           push: true
           tags: |
             pigeonojdev/oj-language-server-java:latest
