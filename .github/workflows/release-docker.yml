@@ -1,0 +1,79 @@
+# 产出构建产物，方便后续依赖跳过构建步骤
+name: release-docker
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Get tagname
+        id: tagname
+        run: echo "value=$(date +'%Y%m%d.%H%M')" >> $GITHUB_OUTPUT
+      - name: Build common image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/common.Dockerfile
+          context: .
+          tags: |
+            pigeonojdev/oj-language-server-common:latest
+            pigeonojdev/oj-language-server-common:${{ steps.tagname.outputs.value }}
+      - name: Build cpp image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/cpp.Dockerfile
+          context: .
+          push: true
+          tags: |
+            pigeonojdev/oj-language-server-cpp:latest
+            pigeonojdev/oj-language-server-cpp:${{ steps.tagname.outputs.value }}
+      - name: Build java image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/java.Dockerfile
+          context: .
+          push: true
+          tags: |
+            pigeonojdev/oj-language-server-java:latest
+            pigeonojdev/oj-language-server-java:${{ steps.tagname.outputs.value }}
+      - name: Build python image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/python.Dockerfile
+          context: .
+          push: true
+          tags: |
+            pigeonojdev/oj-language-server-python:latest
+            pigeonojdev/oj-language-server-python:${{ steps.tagname.outputs.value }}
+      - name: Build web image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/web.Dockerfile
+          context: .
+          push: true
+          tags: |
+            pigeonojdev/oj-language-server-web:latest
+            pigeonojdev/oj-language-server-web:${{ steps.tagname.outputs.value }}
+      - name: Build traefik image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/traefik.Dockerfile
+          push: true
+          tags: |
+            pigeonojdev/oj-language-server-traefik:latest
+            pigeonojdev/oj-language-server-traefik:${{ steps.tagname.outputs.value }}

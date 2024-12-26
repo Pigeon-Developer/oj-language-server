@@ -115,7 +115,13 @@ const EditorMap: Record<string, EditorItem> = {
   java: createJavaWrapper(),
 };
 
-export const language = atom<string>('cpp');
+const params = new URLSearchParams(window.location.search);
+let defaultLang = 'cpp';
+if (params.has('lang') && EditorMap[params.get('lang')!]) {
+  defaultLang = params.get('lang')!;
+}
+
+export const language = atom<string>(defaultLang);
 
 function Select() {
   const value = useStore(language);
@@ -134,7 +140,7 @@ function Select() {
 
 export default function Editor() {
   const onMount = useCallback(() => {
-    runEditor(EditorMap.cpp);
+    runEditor(EditorMap[defaultLang]);
   }, []);
 
   return (

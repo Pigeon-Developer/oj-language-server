@@ -15,6 +15,16 @@ export enum Language {
   cpp = 'cpp',
 }
 
+function getCurrentPort() {
+  if (window.location.port && window.location.port.length) {
+    return parseInt(window.location.port, 10);
+  }
+  return window.location.protocol === 'https:' ? 443 : 80;
+}
+
+const host = window.location.hostname;
+const port = getCurrentPort();
+
 export const createUserConfigForPython = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
   return {
     languageClientConfig: {
@@ -22,8 +32,8 @@ export const createUserConfigForPython = (workspaceRoot: string, code: string, c
       name: 'Python Language Server Example',
       options: {
         $type: 'WebSocket',
-        host: 'localhost',
-        port: 30001,
+        host: host,
+        port: port,
         path: 'pyright',
         extraParams: {
           authorization: 'UserAuth',
@@ -91,8 +101,8 @@ export const createUserConfigForCpp = (workspaceRoot: string, code: string, code
       name: 'Cpp Language Server Example',
       options: {
         $type: 'WebSocket',
-        host: 'localhost',
-        port: 30001,
+        host: host,
+        port: port,
         path: 'clangd',
         extraParams: {
           authorization: 'UserAuth',
@@ -171,8 +181,8 @@ export const createUserConfigForJava = (workspaceRoot: string, code: string, cod
       languageId: 'java',
       options: {
         $type: 'WebSocket',
-        host: 'localhost',
-        port: 30001,
+        host: host,
+        port: port,
         path: 'jdtls',
         extraParams: {
           authorization: 'UserAuth',
