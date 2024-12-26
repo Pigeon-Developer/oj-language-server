@@ -29,6 +29,9 @@ RUN mkdir -p ${PATH_ECLIPSE_JDT} \
     && wget -O ${JDT_TAR_LOCAL} ${JDT_TAR_URL} \
     && tar -xzf ${JDT_TAR_LOCAL}
 
+ARG JAVA_WS=${PATH_MLC}/packages/examples/resources/eclipse.jdt.ls/workspace
+RUN mkdir ${JAVA_WS}
+COPY ./java/hello.java ${JAVA_WS}
 WORKDIR ${PATH_MLC}
 
 COPY --from=common /app /app

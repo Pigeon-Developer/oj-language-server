@@ -14,13 +14,16 @@ services:
       dockerfile: ./web.Dockerfile
 
   cpp:
+    # image: pigeonojdev/oj-language-server-cpp:${TAG:-latest}
     build:
       dockerfile: ./cpp.Dockerfile
 
   java:
+    # image: pigeonojdev/oj-language-server-java:${TAG:-latest}
     build:
       dockerfile: ./java.Dockerfile
 
   python:
+    # image: pigeonojdev/oj-language-server-python:${TAG:-latest}
     build:
       dockerfile: ./python.Dockerfile
