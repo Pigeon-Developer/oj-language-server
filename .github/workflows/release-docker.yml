@@ -30,6 +30,7 @@ jobs:
         with:
           file: docker/common.Dockerfile
           context: .
+          push: true
           tags: |
             pigeonojdev/oj-language-server-common:latest
             pigeonojdev/oj-language-server-common:${{ steps.tagname.outputs.value }}
