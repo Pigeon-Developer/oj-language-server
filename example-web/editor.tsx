@@ -91,10 +91,14 @@ export const createCppWrapper = () => {
 
 export const createJavaWrapper = () => {
   const basePath = '/home/mlc/packages/examples/resources/eclipse.jdt.ls';
-  const filePath = `${basePath}/workspace/main.java`;
+  const filePath = `${basePath}/workspace/hello.java`;
   const fileUri = vscode.Uri.file(filePath);
 
-  const code = ``;
+  const code = `
+public static void main (String[] args) {
+    System.out.println("Hello World!");
+}
+`;
   const fileSystemProvider = new RegisteredFileSystemProvider(false);
   fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, code));
 

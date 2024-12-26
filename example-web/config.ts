@@ -29,6 +29,9 @@ function getSecured() {
 const host = window.location.hostname;
 const port = getCurrentPort();
 const secured = getSecured();
+// const host = '127.0.0.1';
+// const port = 30003;
+// const secured = false;
 
 export const createUserConfigForPython = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
   return {
