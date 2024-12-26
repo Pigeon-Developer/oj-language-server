@@ -2,6 +2,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const isProduction = process.argv[process.argv.indexOf('--mode') + 1] === 'production';
 
@@ -19,6 +21,20 @@ const cssLoaderConfig = {
 const postcss = {
   loader: 'postcss-loader',
 };
+
+const minimizer = isProduction
+  ? [
+      new TerserPlugin({
+        minify: TerserPlugin.swcMinify,
+        terserOptions: {
+          compress: {
+            passes: 2,
+          },
+        },
+      }),
+      new CssMinimizerPlugin(),
+    ]
+  : [new CssMinimizerPlugin()];
 
 const ASSET_PATH = process.env.BUILD_CDN_PREFIX || 'auto';
 
@@ -41,6 +57,11 @@ module.exports = {
       overlay: false,
       progress: true,
     },
+  },
+  optimization: {
+    minimizer: minimizer,
+    sideEffects: true,
+    providedExports: true,
   },
   cache: {
     type: 'filesystem',
