@@ -74,6 +74,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           file: docker/traefik.Dockerfile
+          context: ./docker
           push: true
           tags: |
             pigeonojdev/oj-language-server-traefik:latest
