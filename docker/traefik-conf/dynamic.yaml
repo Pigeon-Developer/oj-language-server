@@ -1,0 +1,33 @@
+http:
+  routers:
+    to-clangd:
+      rule: 'PathPrefix(`/clangd`)'
+      service: clangd
+    to-jdtls:
+      rule: 'PathPrefix(`/jdtls`)'
+      service: jdtls
+    to-pyright:
+      rule: 'PathPrefix(`/pyright`)'
+      service: pyright
+    to-web:
+      rule: 'PathPrefix(`/`)'
+      service: web
+      priority: 1
+
+  services:
+    clangd:
+      loadBalancer:
+        servers:
+          - url: http://cpp:30001/clangd
+    jdtls:
+      loadBalancer:
+        servers:
+          - url: http://java:30001/jdtls
+    pyright:
+      loadBalancer:
+        servers:
+          - url: http://python:30001/pyright
+    web:
+      loadBalancer:
+        servers:
+          - url: http://web:3000

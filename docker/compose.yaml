@@ -1,0 +1,20 @@
+name: oj-language-server
+
+services:
+  traefik:
+    image: pigeonojdev/oj-language-server-traefik:${TAG:-latest}
+    command: --configFile=/traefik-conf/static.yaml
+    ports:
+      - 9000:8080
+
+  web:
+    image: pigeonojdev/oj-language-server-web:${TAG:-latest}
+
+  cpp:
+    image: pigeonojdev/oj-language-server-cpp:${TAG:-latest}
+
+  java:
+    image: pigeonojdev/oj-language-server-java:${TAG:-latest}
+
+  python:
+    image: pigeonojdev/oj-language-server-python:${TAG:-latest}

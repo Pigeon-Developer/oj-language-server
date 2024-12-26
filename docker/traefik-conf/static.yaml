@@ -1,0 +1,10 @@
+log:
+  level: TRACE
+
+entryPoints:
+  web:
+    address: :8080
+
+providers:
+  file:
+    filename: /traefik-conf/dynamic.yaml

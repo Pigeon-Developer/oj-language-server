@@ -1,0 +1,26 @@
+name: oj-language-server-dev
+
+services:
+  traefik:
+    image: traefik:v3.2
+    volumes:
+      - ./traefik-conf:/traefik-conf
+    command: --configFile=/traefik-conf/static.yaml
+    ports:
+      - 9000:8080
+
+  web:
+    build:
+      dockerfile: ./web.Dockerfile
+
+  cpp:
+    build:
+      dockerfile: ./cpp.Dockerfile
+
+  java:
+    build:
+      dockerfile: ./java.Dockerfile
+
+  python:
+    build:
+      dockerfile: ./python.Dockerfile

@@ -12,7 +12,7 @@ ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin:${PATH}"
 
 
 COPY . /app
-RUN cd /app && corepack enable && corepack use pnpm@9.9.0
+RUN cd /app && corepack enable && corepack use pnpm@9.15.1
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd /app && pnpm install --frozen-lockfile
 RUN cd /app && pnpm build:lsp
 
