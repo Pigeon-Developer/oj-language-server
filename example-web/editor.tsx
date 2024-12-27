@@ -127,13 +127,19 @@ if (params.has('lang') && EditorMap[params.get('lang')!]) {
 
 export const language = atom<string>(defaultLang);
 
+function handleLanguageChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('lang', e.target.value);
+  window.location.href = url.toString();
+}
+
 function Select() {
   const value = useStore(language);
 
   return (
     <div>
       语言
-      <select value={value}>
+      <select value={value} onChange={handleLanguageChange}>
         <option value="cpp">cpp</option>
         <option value="python">python</option>
         <option value="java">java</option>
